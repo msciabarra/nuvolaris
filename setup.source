@@ -140,13 +140,13 @@ else ok jest
 fi
 export PATH="$(nodenv prefix)/bin:$PATH"
 
-# install coursier
-if ! which cs >/dev/null
-then curl -sfLo $HOME/.local/bin/cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
-     chmod +x $HOME/.local/bin/cs  
-else ok coursier
-fi
-eval "$(cs setup --env 2>/dev/null)"
+# install coursier - disabled for now as not (yet) needed
+#if ! which cs >/dev/null
+#then curl -sfLo $HOME/.local/bin/cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
+#     chmod +x $HOME/.local/bin/cs  
+#else ok coursier
+#fi
+#eval "$(cs setup --env 2>/dev/null)"
 
 # extra
 if test -e ~/.localrc
@@ -158,6 +158,9 @@ if test -e kubeconfig
 then export KUBECONFIG=$PWD/kubeconfig
 fi
 
+# a few aliases
+alias l=l
+alias ll="ls -l"
 alias k="kubectl"
 alias ka="kubectl apply"
 alias kg="kubectl get"

@@ -32,6 +32,7 @@ RUN ARCH=$(dpkg --print-architecture) ;\
 RUN apt-get update &&\
  apt-get -y install \
    sudo socat telnet \
+   locales \
    inetutils-ping \
    lsb-release \
    build-essential \
@@ -41,7 +42,8 @@ RUN apt-get update &&\
    libgdbm-dev libnss3-dev libssl-dev \
    libreadline-dev libffi-dev libsqlite3-dev \
    java-11-amazon-corretto-jdk \
-   docker-ce-cli
+   docker-ce-cli &&\
+ locale-gen $LANG
 # Download kind
 RUN KVER="v0.11.1" ;\
     ARCH="$(dpkg --print-architecture)" ;\
