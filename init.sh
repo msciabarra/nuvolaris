@@ -25,14 +25,13 @@ then echo "Please install Kind from https://kind.sigs.k8s.io/docs/user/quick-sta
      exit 1
 fi
 
-# you are requesting a destroy
-if test "$1" == "destroy"
+# you are requesting a rebuild
+if test "$1" == "reset"
 then kind delete clusters nuvolaris
-     exit 0
 fi
 
 if test "$1" != ""
-then echo "use either no arguments to create a cluster or destroy to destroy it"
+then echo "use either no arguments to create a cluster or 'reset' to rebuild it"
     exit 1
 fi
 
@@ -66,14 +65,17 @@ nodes:
 EOF
 fi
 
+# we are in docker
 if test -f /.dockerenv
 then 
   # copy the kubeconfig
   mkdir -p /home/nuvolaris/.kube 
   sudo cp /root/.kube/config /home/nuvolaris/.kube/config
   sudo chown nuvolaris:nuvolaris /home/nuvolaris/.kube/config
-  # proxy to sockerhost and loop forever
-  exec sudo /usr/bin/socat \
-  UNIX-LISTEN:/var/run/docker.sock,fork,mode=660,user=nuvolaris \
-  UNIX-CONNECT:/var/run/docker-host.sock
+  # proxy to sockerhost and loop forever if not yet there
+  if ! test -S /var/run/docker-host.sock
+  then exec sudo /usr/bin/socat \
+       UNIX-LISTEN:/var/run/docker.sock,fork,mode=660,user=nuvolaris \
+       UNIX-CONNECT:/var/run/docker-host.sock
+  fi
 fi
